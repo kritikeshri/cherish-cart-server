@@ -204,9 +204,15 @@ public class ProductResource {
 
 		// deleting the existing image from the folder
 		try {
-			this.storageService.delete(existingImage1);
-			this.storageService.delete(existingImage2);
-			this.storageService.delete(existingImage3);
+			if (existingImage1 != null && !existingImage1.isBlank()) {
+				this.storageService.delete(existingImage1);
+			}
+			if (existingImage2 != null && !existingImage2.isBlank()) {
+				this.storageService.delete(existingImage2);
+			}
+			if (existingImage3 != null && !existingImage3.isBlank()) {
+				this.storageService.delete(existingImage3);
+			}
 
 		} catch (Exception e) {
 			LOG.error("Exception Caught: " + e.getMessage());
