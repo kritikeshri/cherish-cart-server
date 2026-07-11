@@ -66,7 +66,7 @@ public class CategoryResource {
 
 	public ResponseEntity<CommonApiResponse> updateCategory(Category category) {
 		
-		LOG.info("Request received for add category");
+		LOG.info("Request received for update category");
 
 		CommonApiResponse response = new CommonApiResponse();
 
