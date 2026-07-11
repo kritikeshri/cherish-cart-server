@@ -88,15 +88,20 @@ public class ProductResource {
 		product.setSeller(seller);
 		product.setCategory(category);
 
-		// store product image in Image Folder and give name to store in database
-		String productImageName1 = storageService.store(productDto.getImage1());
-		String productImageName2 = storageService.store(productDto.getImage2());
-		String productImageName3 = storageService.store(productDto.getImage3());
+		if (productDto.getImage1() != null && !productDto.getImage1().isEmpty()) {
+			String productImageName1 = storageService.store(productDto.getImage1());
+			product.setImage1(productImageName1);
+		}
 
-		product.setImage1(productImageName1);
-		product.setImage2(productImageName2);
-		product.setImage3(productImageName3);
+		if (productDto.getImage2() != null && !productDto.getImage2().isEmpty()) {
+			String productImageName2 = storageService.store(productDto.getImage2());
+			product.setImage2(productImageName2);
+		}
 
+		if (productDto.getImage3() != null && !productDto.getImage3().isEmpty()) {
+			String productImageName3 = storageService.store(productDto.getImage3());
+			product.setImage3(productImageName3);
+		}
 		Product savedProduct = this.productService.addProduct(product);
 
 		if (savedProduct == null) {
