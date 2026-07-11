@@ -474,6 +474,7 @@ public class ProductResource {
 		Resource resource = storageService.load(productImageName);
 		if (resource != null) {
 			try (InputStream in = resource.getInputStream()) {
+				resp.setContentType("image/jpeg"); // Need to test if we need check for different extensions
 				ServletOutputStream out = resp.getOutputStream();
 				FileCopyUtils.copy(in, out);
 			} catch (IOException e) {

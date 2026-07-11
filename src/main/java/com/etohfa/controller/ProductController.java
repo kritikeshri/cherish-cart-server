@@ -63,9 +63,7 @@ public class ProductController {
 
 	@GetMapping("getAll")
 	@Operation(summary = "Api to fetch all active product")
-	public ResponseEntity<ProductResponseDto> fetchAllProduct(
-
-	) {
+	public ResponseEntity<ProductResponseDto> fetchAllProduct() {
 		return this.productResource.fetchAllProducts();
 	}
 
@@ -105,9 +103,6 @@ public class ProductController {
 
 	@GetMapping(value = "/{productImageName}", produces = "image/*")
 	public void fetchProductImage(@PathVariable("productImageName") String productImageName, HttpServletResponse resp) {
-
 		this.productResource.fetchProductImage(productImageName, resp);
-
 	}
-
 }
