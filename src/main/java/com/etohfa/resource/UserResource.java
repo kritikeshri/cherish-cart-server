@@ -121,8 +121,8 @@ public class UserResource {
 
 		CommonApiResponse response = new CommonApiResponse();
 
-		if (request == null) {
-			response.setResponseMessage("user is null");
+		if (request == null || request.getEmailId() == null || request.getPassword() == null || request.getRole() == null) {
+			response.setResponseMessage("missing input fields, email, password and role are mandatory");
 			response.setSuccess(false);
 
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
@@ -154,6 +154,11 @@ public class UserResource {
 		// delivery person is for seller, so we need to set Seller
 		if (user.getRole().equals(UserRole.ROLE_DELIVERY.value())) {
 
+			if (request.getSellerId() == 0) {
+				response.setResponseMessage("Delivery person must be register with seller, missing seller id");
+				response.setSuccess(false);
+				return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
+			}
 			User seller = this.userService.getUserById(request.getSellerId());
 
 			if (seller == null) {
@@ -162,9 +167,7 @@ public class UserResource {
 
 				return new ResponseEntity<CommonApiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-
 			user.setSeller(seller);
-
 		}
 		
 		Address address = new Address();
