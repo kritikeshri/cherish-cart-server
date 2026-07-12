@@ -18,7 +18,7 @@ import com.etohfa.resource.ReviewResource;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping("api/product/review")
+@RequestMapping("api/products/review")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ReviewController {
 	

@@ -23,14 +23,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("api/product")
+@RequestMapping("api/products")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
 
 	@Autowired
 	private ProductResource productResource;
 
-	@PostMapping("add")
+	@PostMapping("")
 	@Operation(summary = "Api to add product")
 	public ResponseEntity<CommonApiResponse> addProduct(ProductAddRequest productDto) {
 		return this.productResource.addProduct(productDto);
@@ -55,13 +55,13 @@ public class ProductController {
 		return this.productResource.deleteProduct(productId, sellerId);
 	}
 
-	@GetMapping("fetch")
+	@GetMapping("/{productId}")
 	@Operation(summary = "Api to fetch product by Id")
-	public ResponseEntity<ProductResponseDto> fetchProductById(@RequestParam(name = "productId") int productId) {
+	public ResponseEntity<ProductResponseDto> fetchProductById(@PathVariable("productId") Integer productId) {
 		return this.productResource.fetchProductById(productId);
 	}
 
-	@GetMapping("getAll")
+	@GetMapping("")
 	@Operation(summary = "Api to fetch all active product")
 	public ResponseEntity<ProductResponseDto> fetchAllProduct() {
 		return this.productResource.fetchAllProducts();
@@ -80,10 +80,10 @@ public class ProductController {
 		return this.productResource.fetchAllSellerProductsWithCategory(sellerId, categoryId);
 	}
 
-	@GetMapping("search")
+	@GetMapping("search/{productName}")
 	@Operation(summary = "Api to search the products by name")
 	public ResponseEntity<ProductResponseDto> searchProductsByName(
-			@RequestParam(name = "productName") String productName) {
+			@PathVariable(name = "productName") String productName) {
 		return this.productResource.searchProductByName(productName);
 	}
 
