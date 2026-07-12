@@ -347,7 +347,7 @@ public class OrderResource {
 		}
 
 		response.setOrders(updatedOrders);
-		response.setResponseMessage("Orders fetched successful");
+		response.setResponseMessage("Delivery Person assigned for the Order successfully");
 		response.setSuccess(true);
 
 		return new ResponseEntity<OrderResponseDto>(response, HttpStatus.OK);
@@ -405,7 +405,7 @@ public class OrderResource {
 		}
 
 		response.setOrders(updatedOrders);
-		response.setResponseMessage("Orders fetched successful");
+		response.setResponseMessage("Orders status updated successfully");
 		response.setSuccess(true);
 
 		return new ResponseEntity<OrderResponseDto>(response, HttpStatus.OK);

@@ -55,7 +55,7 @@ public class SecurityConfig {
 								"/api/product/review/seller")
 						.hasAuthority(UserRole.ROLE_SELLER.value())
 						
-						// this APIs are only accessible by SELLER
+						// this APIs are only accessible by Delivery Person
 						.requestMatchers("/api/order/update/delivery-status", "/api/order/fetch/delivery-wise")
 						.hasAuthority(UserRole.ROLE_DELIVERY.value())
 						

@@ -29,7 +29,7 @@ public class OrderController {
 	private OrderResource orderResource;
 	
 	@PostMapping("/add")
-	@Operation(summary = "Api to order the products in Cart")
+	@Operation(summary = "Api to order all products from Cart")
 	public ResponseEntity<CommonApiResponse> placeOrder(@RequestParam("userId") int userId) {
 		return orderResource.orderProductsFromCart(userId);
 	}

@@ -81,4 +81,12 @@ public class OrderServiceImpl implements OrderService {
 		return this.orderDao.findByStatusAndDeliveryPerson(status, user);
 	}
 
+	@Override
+	public List<Orders> getOrdersByUserAndProductAndStatus(int userId, int productId,
+    	List<String> status) {
+    	return this.orderDao.findByUserIdAndProductIdAndStatusIn(
+            userId,
+            productId,
+            status);
+	}
 }

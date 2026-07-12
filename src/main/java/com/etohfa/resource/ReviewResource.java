@@ -1,6 +1,7 @@
 package com.etohfa.resource;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,18 +16,24 @@ import org.springframework.util.CollectionUtils;
 import com.etohfa.dto.AddReviewRequest;
 import com.etohfa.dto.CommonApiResponse;
 import com.etohfa.dto.ProductReviewResponseDto;
+import com.etohfa.entity.Orders;
 import com.etohfa.entity.Product;
 import com.etohfa.entity.Review;
 import com.etohfa.entity.User;
 import com.etohfa.exception.ReviewSaveFailedException;
+import com.etohfa.service.OrderService;
 import com.etohfa.service.ProductService;
 import com.etohfa.service.ReviewService;
 import com.etohfa.service.UserService;
+import com.etohfa.utility.Constants.DeliveryStatus;
 
 @Component
 public class ReviewResource {
 
 	private final Logger LOG = LoggerFactory.getLogger(ProductResource.class);
+
+	@Autowired
+	private OrderService orderService;
 
 	@Autowired
 	private ProductService productService;
@@ -68,22 +75,30 @@ public class ReviewResource {
 
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
+		
+		// Check if the user has any delivered orders for the product
+		List<Orders> orders = new ArrayList<>();
+		orders = orderService.getOrdersByUserAndProductAndStatus(request.getUserId(), request.getProductId(),
+			Arrays.asList(DeliveryStatus.DELIVERED.value()));
+			
+		if (CollectionUtils.isEmpty(orders)) {
+			response.setResponseMessage("No Delivered Orders Found for the user and product");
+			response.setSuccess(false);
+			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
+		} else {
+			Review review = new Review();
+			review.setProduct(product);
+			review.setReview(request.getReview());
+			review.setStar(request.getStar());
+			review.setUser(user);
 
-		Review review = new Review();
-		review.setProduct(product);
-		review.setReview(request.getReview());
-		review.setStar(request.getStar());
-		review.setUser(user);
-
-		Review addedReview = this.reviewService.addReview(review);
-
-		if (addedReview == null) {
-			throw new ReviewSaveFailedException("Failed to save the review");
+			Review addedReview = this.reviewService.addReview(review);
+			if (addedReview == null) {
+				throw new ReviewSaveFailedException("Failed to save the review");
+			}
+			response.setResponseMessage("product review added successful");
+			response.setSuccess(true);
 		}
-
-		response.setResponseMessage("product review added successful");
-		response.setSuccess(true);
-
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
 	}
 

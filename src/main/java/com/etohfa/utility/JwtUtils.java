@@ -21,6 +21,15 @@ public class JwtUtils {
 
     public static final String SECRET = "5aB3r1P8mNqRvKgY7cZxW9jF2hT6fU0eL4dS1aC3bXwVzE6tR8yH0jM5nQ8pZ2k";
 
+    public String extractUsernameFromHeaders(String authHeader) {
+        String token = null;
+        String username = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            username = extractUsername(token);
+        }
+        return username;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

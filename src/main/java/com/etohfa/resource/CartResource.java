@@ -24,7 +24,7 @@ import com.etohfa.exception.CartSaveFailedException;
 import com.etohfa.service.CartService;
 import com.etohfa.service.ProductService;
 import com.etohfa.service.UserService;
-
+import com.etohfa.utility.JwtUtils;
 import jakarta.transaction.Transactional;
 
 @Component
@@ -32,6 +32,9 @@ import jakarta.transaction.Transactional;
 public class CartResource {
 
 	private final Logger LOG = LoggerFactory.getLogger(CartResource.class);
+
+	 @Autowired
+    private JwtUtils jwtUtils;
 
 	@Autowired
 	private CartService cartService;
@@ -42,11 +45,18 @@ public class CartResource {
 	@Autowired
 	private ProductService productService;
 
-	public ResponseEntity<CommonApiResponse> addToCart(CartRequestDto request) {
+	public ResponseEntity<CommonApiResponse> addToCart(CartRequestDto request,String authorization) {
 
 		LOG.info("Request received for add to cart");
 
 		CommonApiResponse response = new CommonApiResponse();
+		
+		String username = jwtUtils.extractUsernameFromHeaders(authorization);
+		if (username == null) {
+			response.setResponseMessage("Unauthorized User to add to Cart");
+			response.setSuccess(false);
+			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.UNAUTHORIZED);
+		}
 
 		if (request == null || request.getUserId() == 0 || request.getProductId() == 0) {
 			response.setResponseMessage("missing input");
@@ -62,6 +72,15 @@ public class CartResource {
 			response.setSuccess(false);
 
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
+		}
+
+		// check if the username from the token matches the email of the user
+		// if not, return unauthorized response
+		if (!user.getEmailId().equals(username)) {
+			response.setResponseMessage("Unauthorized User to add to Cart");
+			response.setSuccess(false);
+
+			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.UNAUTHORIZED);
 		}
 
 		Product product = this.productService.getProductById(request.getProductId());

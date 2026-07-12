@@ -29,4 +29,6 @@ public interface OrderService {
 	
 	List<Orders> getOrdersByDeliveryPersonAndStatusIn(User user, List<String> status);
 
+	List<Orders> getOrdersByUserAndProductAndStatus(int userId, int productId, List<String> status);
+
 }

@@ -6,7 +6,7 @@ public class Constants {
 		ROLE_CUSTOMER("Customer"),
 		ROLE_ADMIN("Admin"),
 		ROLE_SELLER("Seller"),
-		ROLE_DELIVERY("Delivery");
+		ROLE_DELIVERY("DeliveryPerson");
 		
 		private String role;
 
