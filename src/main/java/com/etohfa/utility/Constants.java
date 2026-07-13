@@ -35,13 +35,13 @@ public class Constants {
 	    }    
 	}
 
-	public enum DeliveryStatus {
+	public enum OrderStatus {
 		CANCELLED("Cancelled"), DELIVERED("Delivered"), ON_THE_WAY("On the Way"), 
 		PLACED("Placed"), PROCESSING("Processing");
 
 		private String status;
 
-		private DeliveryStatus(String status) {
+		private OrderStatus(String status) {
 			this.status = status;
 		}
 

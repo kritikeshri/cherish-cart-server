@@ -28,7 +28,7 @@ import com.etohfa.service.CartService;
 import com.etohfa.service.OrderService;
 import com.etohfa.service.ProductService;
 import com.etohfa.service.UserService;
-import com.etohfa.utility.Constants.DeliveryStatus;
+import com.etohfa.utility.Constants.OrderStatus;
 import com.etohfa.utility.Constants.DeliveryTime;
 import com.etohfa.utility.Constants.UserRole;
 import com.etohfa.utility.Helper;
@@ -129,7 +129,7 @@ public class OrderResource {
 		        order.setOrderTime(orderTime);
 		        order.setQuantity(cart.getQuantity());
 		        order.setProduct(cart.getProduct());
-		        order.setStatus(DeliveryStatus.PLACED.value());
+		        order.setStatus(OrderStatus.PLACED.value());
 
 		        orders.add(order);
 		        
@@ -209,8 +209,8 @@ public class OrderResource {
 
 		List<Orders> orders = new ArrayList<>();
 		orders = this.orderService.getOrdersByUserAndStatusIn(user,
-				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
-						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
+				Arrays.asList(OrderStatus.PLACED.value(), OrderStatus.DELIVERED.value(),
+						OrderStatus.ON_THE_WAY.value(), OrderStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
 			response.setResponseMessage("No orders found");
@@ -249,8 +249,8 @@ public class OrderResource {
 		List<Orders> orders = new ArrayList<>();
 
 		orders = this.orderService.getOrdersBySellerAndStatusIn(seller,
-				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
-						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
+				Arrays.asList(OrderStatus.PLACED.value(), OrderStatus.DELIVERED.value(),
+						OrderStatus.ON_THE_WAY.value(), OrderStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
 			response.setResponseMessage("No orders found");
@@ -311,8 +311,8 @@ public class OrderResource {
 		}
 
 		List<Orders> orders = this.orderService.getOrdersByOrderIdAndStatusIn(request.getOrderId(),
-				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
-						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
+				Arrays.asList(OrderStatus.PLACED.value(), OrderStatus.DELIVERED.value(),
+						OrderStatus.ON_THE_WAY.value(), OrderStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
 			response.setResponseMessage("no orders by found");
@@ -333,7 +333,7 @@ public class OrderResource {
 
 		for (Orders order : orders) {
 			order.setDeliveryPerson(deliveryPerson);
-			order.setStatus(DeliveryStatus.PROCESSING.value());
+			order.setStatus(OrderStatus.PROCESSING.value());
 		}
 
 		List<Orders> updatedOrders = this.orderService.updateOrders(orders);
@@ -363,7 +363,7 @@ public class OrderResource {
 			return new ResponseEntity<OrderResponseDto>(response, HttpStatus.BAD_REQUEST);
 		}
 
-		if(!request.getStatus().equals(DeliveryStatus.ON_THE_WAY.value()) && !request.getStatus().equals(DeliveryStatus.DELIVERED.value())){
+		if(!request.getStatus().equals(OrderStatus.ON_THE_WAY.value()) && !request.getStatus().equals(OrderStatus.DELIVERED.value())){
 			response.setResponseMessage("Delivery Person can only set the status to ON_THE_WAY or DELIVERED");
 			response.setSuccess(false);
 			return new ResponseEntity<OrderResponseDto>(response, HttpStatus.BAD_REQUEST);
@@ -372,8 +372,8 @@ public class OrderResource {
 		User deliveryPerson = this.userService.getUserById(request.getDeliveryId());
 
 		List<Orders> orders = this.orderService.getOrdersByOrderIdAndStatusIn(request.getOrderId(),
-				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
-						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
+				Arrays.asList(OrderStatus.PLACED.value(), OrderStatus.DELIVERED.value(),
+						OrderStatus.ON_THE_WAY.value(), OrderStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
 			response.setResponseMessage("no orders by found");
@@ -395,8 +395,8 @@ public class OrderResource {
 			order.setDeliveryDate(request.getDeliveryDate());
 			order.setDeliveryTime(request.getDeliveryTime());
 
-			if (request.getStatus().equals(DeliveryStatus.DELIVERED.value())) {
-				order.setStatus(DeliveryStatus.DELIVERED.value());
+			if (request.getStatus().equals(OrderStatus.DELIVERED.value())) {
+				order.setStatus(OrderStatus.DELIVERED.value());
 			}
 		}
 
@@ -438,8 +438,8 @@ public class OrderResource {
 		List<Orders> orders = new ArrayList<>();
 
 		orders = this.orderService.getOrdersByDeliveryPersonAndStatusIn(delivery,
-				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
-						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
+				Arrays.asList(OrderStatus.PLACED.value(), OrderStatus.DELIVERED.value(),
+						OrderStatus.ON_THE_WAY.value(), OrderStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
 			response.setResponseMessage("No orders found");
@@ -455,15 +455,15 @@ public class OrderResource {
 		return new ResponseEntity<OrderResponseDto>(response, HttpStatus.OK);
 	}
 
-	public ResponseEntity<List<String>> fetchAllDeliveryStatus() {
+	public ResponseEntity<List<String>> getAllOrderStatus() {
 
-		List<String> deliveryStatus = new ArrayList<>();
+		List<String> orderStatus = new ArrayList<>();
 
-		for (DeliveryStatus status : DeliveryStatus.values()) {
-			deliveryStatus.add(status.value());
+		for (OrderStatus status : OrderStatus.values()) {
+			orderStatus.add(status.value());
 		}
 
-		return new ResponseEntity<List<String>>(deliveryStatus, HttpStatus.OK);
+		return new ResponseEntity<List<String>>(orderStatus, HttpStatus.OK);
 
 	}
 

@@ -25,7 +25,7 @@ import com.etohfa.service.OrderService;
 import com.etohfa.service.ProductService;
 import com.etohfa.service.ReviewService;
 import com.etohfa.service.UserService;
-import com.etohfa.utility.Constants.DeliveryStatus;
+import com.etohfa.utility.Constants.OrderStatus;
 
 @Component
 public class ReviewResource {
@@ -79,7 +79,7 @@ public class ReviewResource {
 		// Check if the user has any delivered orders for the product
 		List<Orders> orders = new ArrayList<>();
 		orders = orderService.getOrdersByUserAndProductAndStatus(request.getUserId(), request.getProductId(),
-			Arrays.asList(DeliveryStatus.DELIVERED.value()));
+			Arrays.asList(OrderStatus.DELIVERED.value()));
 			
 		if (CollectionUtils.isEmpty(orders)) {
 			response.setResponseMessage("No Delivered Orders Found for the user and product");

@@ -61,8 +61,8 @@ public class OrderController {
 	
 	@GetMapping("/delivery-statuses")
 	@Operation(summary = "Api to fetch all delivery status")
-	public ResponseEntity<List<String>> fetchAllDeliveryStatus() {
-		return orderResource.fetchAllDeliveryStatus();
+	public ResponseEntity<List<String>> getAllOrderStatus() {
+		return orderResource.getAllOrderStatus();
 	}
 	
 	@GetMapping("/delivery-times")
