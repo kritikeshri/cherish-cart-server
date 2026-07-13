@@ -46,12 +46,15 @@ public class SecurityConfig {
 						
 						// this APIs are only accessible by ADMIN
 						.requestMatchers("/api/user/admin/add","/api/user/delete/seller", "/api/order/getAll",
-								"/api/category/update", "/api/category/add", "/api/category/delete")
+								"/api/categories/update", "/api/categories/delete")
+						.hasAuthority(UserRole.ROLE_ADMIN.value())
+
+						.requestMatchers(HttpMethod.POST, "/api/categories")
 						.hasAuthority(UserRole.ROLE_ADMIN.value())
 						
 						// this APIs are only accessible by SELLER
 						.requestMatchers("/api/user/fetch/seller/delivery-person", "/api/user/delete/seller/delivery-person", "/api/products/update/image",
-								"/api/products/update/detail", "/api/product/delete",
+								"/api/products/update/detail", "/api/products/delete",
 								"/api/order/assign/delivery-person", "/api/order/fetch/seller-wise",
 								"/api/products/review/seller")
 						.hasAuthority(UserRole.ROLE_SELLER.value())
@@ -66,6 +69,9 @@ public class SecurityConfig {
 						// this APIs are only accessible by Customer
 						.requestMatchers("/api/order/add", "/api/order/fetch/user-wise", "/api/cart/update",
 								"/api/cart/add", "/api/cart/fetch", "/api/cart/delete", "/api/product/review/add")
+						.hasAuthority(UserRole.ROLE_CUSTOMER.value())
+
+						.requestMatchers(HttpMethod.POST, "/api/order")
 						.hasAuthority(UserRole.ROLE_CUSTOMER.value())
 
 						// this APIs are only accessible by ADMIN & SELLER

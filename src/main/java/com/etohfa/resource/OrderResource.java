@@ -30,7 +30,10 @@ import com.etohfa.service.ProductService;
 import com.etohfa.service.UserService;
 import com.etohfa.utility.Constants.DeliveryStatus;
 import com.etohfa.utility.Constants.DeliveryTime;
+import com.etohfa.utility.Constants.UserRole;
+import com.etohfa.utility.Constants.UserStatus;
 import com.etohfa.utility.Helper;
+import com.etohfa.utility.JwtUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -52,20 +55,23 @@ public class OrderResource {
 	@Autowired
 	private OrderService orderService;
 
-	public ResponseEntity<CommonApiResponse> orderProductsFromCart(int userId) {
+	@Autowired
+    private JwtUtils jwtUtils;
+
+	public ResponseEntity<CommonApiResponse> orderProductsFromCart(String authorization) {
 
 		LOG.info("Request received for ordering the products from the Cart");
 
 		CommonApiResponse response = new CommonApiResponse();
 
-		if (userId == 0) {
-			response.setResponseMessage("user id missing");
+		String username = jwtUtils.extractUsernameFromHeaders(authorization);
+		if (username == null) {
+			response.setResponseMessage("Unauthorized User to add to Cart");
 			response.setSuccess(false);
-
-			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.UNAUTHORIZED);
 		}
 
-		User user = this.userService.getUserById(userId);
+		User user = this.userService.getUserByEmailId(username);
 
 		if (user == null) {
 			response.setResponseMessage("User not found");
@@ -156,7 +162,7 @@ public class OrderResource {
 			throw new OrderSaveFailedException("Failed to Order Products");
 		}
 
-		response.setResponseMessage("Order Placed Successful, Check Status in Dashboard!!!");
+		response.setResponseMessage("Order Placed Successful Check Status in Dashboard!!!");
 		response.setSuccess(true);
 
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
