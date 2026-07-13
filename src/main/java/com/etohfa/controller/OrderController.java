@@ -41,12 +41,6 @@ public class OrderController {
 	public ResponseEntity<OrderResponseDto> fetchAllOrders() {
 		return orderResource.fetchAllOrders();
 	}
-	
-	@GetMapping("/fetch/user-wise")
-	@Operation(summary = "Api to fetch user orders")
-	public ResponseEntity<OrderResponseDto> fetchUserOrders(@RequestParam("userId") int userId) {
-		return orderResource.fetchUserOrders(userId);
-	}
 
 	@GetMapping("/{orderId}")
 	@Operation(summary = "Api to fetch orders by order id")
@@ -64,12 +58,6 @@ public class OrderController {
 	@Operation(summary = "Api to update the delivery status of Order")
 	public ResponseEntity<OrderResponseDto> updateDeliveryStatus(@RequestBody UpdateDeliveryStatusRequest request) {
 		return orderResource.updateDeliveryStatus(request);
-	}
-	
-	@GetMapping("/fetch/delivery-wise")
-	@Operation(summary = "Api to fetch delivery person orders")
-	public ResponseEntity<OrderResponseDto> fetchDeliveryOrders(@RequestParam("deliveryPersonId") int deliveryPersonId) {
-		return orderResource.fetchDeliveryOrders(deliveryPersonId);
 	}
 	
 	@GetMapping("/delivery-statuses")

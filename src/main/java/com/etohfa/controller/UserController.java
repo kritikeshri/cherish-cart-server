@@ -10,15 +10,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.etohfa.dto.CommonApiResponse;
+import com.etohfa.dto.OrderResponseDto;
 import com.etohfa.dto.RegisterUserRequestDto;
 import com.etohfa.dto.UserLoginRequest;
 import com.etohfa.dto.UserLoginResponse;
 import com.etohfa.dto.UserResponseDto;
 import com.etohfa.dto.UserStatusUpdateRequestDto;
 import com.etohfa.resource.UserResource;
+import com.etohfa.resource.OrderResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +33,8 @@ public class UserController {
 
 	@Autowired
 	private UserResource userResource;
+	@Autowired
+	private OrderResource orderResource;
 
 	// RegisterUserRequestDto, we will set only email, password & role from UI
 	@PostMapping("/admin/add")
@@ -51,7 +56,7 @@ public class UserController {
 		return userResource.login(userLoginRequest);
 	}
 	
-	@GetMapping("/fetch/role-wise")
+	@GetMapping(value = "", params = "role")
 	@Operation(summary =  "Api to get Users By Role")
 	public ResponseEntity<UserResponseDto> fetchAllUsersByRole(@RequestParam("role") String role) throws JsonProcessingException {
 		return userResource.getUsersByRole(role);
@@ -80,5 +85,10 @@ public class UserController {
 	public ResponseEntity<CommonApiResponse> deleteDeliveryPerson(@RequestParam("deliveryId") int deliveryId) {
 		return userResource.deleteDeliveryPerson(deliveryId);
 	}
-
+	
+	@GetMapping("/{userId}/orders")
+	@Operation(summary = "Api to get all orders for a user")
+	public ResponseEntity<OrderResponseDto> getOrdersByUserId(@PathVariable("userId") int userId) {
+		return orderResource.getOrdersByUserId(userId);
+	}
 }

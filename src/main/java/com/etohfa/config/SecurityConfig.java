@@ -69,15 +69,19 @@ public class SecurityConfig {
 						.hasAuthority(UserRole.ROLE_DELIVERY.value())
 						
 						// this APIs are only accessible by Customer
-						.requestMatchers( "/api/order/fetch/user-wise", "/api/carts/items")
+						.requestMatchers( "/api/user/*/orders", "/api/carts/items")
 						.hasAuthority(UserRole.ROLE_CUSTOMER.value())
 
 						.requestMatchers(HttpMethod.POST, "/api/order", "/api/products/review")
 						.hasAuthority(UserRole.ROLE_CUSTOMER.value())
 
 						// this APIs are only accessible by ADMIN & SELLER
-						.requestMatchers("/api/user/fetch/role-wise", "/api/user/update/status")
+						.requestMatchers(HttpMethod.GET, "/api/user")
 						.hasAnyAuthority(UserRole.ROLE_ADMIN.value(), UserRole.ROLE_SELLER.value())
+
+						.requestMatchers(HttpMethod.PUT, "/api/user/update/status")
+						.hasAnyAuthority(UserRole.ROLE_ADMIN.value(), UserRole.ROLE_SELLER.value())
+						
 						
 						.anyRequest()
 						.permitAll())

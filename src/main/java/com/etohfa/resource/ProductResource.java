@@ -28,6 +28,8 @@ import com.etohfa.service.ProductService;
 import com.etohfa.service.StorageService;
 import com.etohfa.service.UserService;
 import com.etohfa.utility.Constants.ProductStatus;
+import com.etohfa.utility.JwtUtils;
+import com.etohfa.utility.Constants.UserRole;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,6 +40,9 @@ import jakarta.transaction.Transactional;
 public class ProductResource {
 
 	private final Logger LOG = LoggerFactory.getLogger(ProductResource.class);
+
+	@Autowired
+    private JwtUtils jwtUtils;
 
 	@Autowired
 	private ProductService productService;
@@ -227,32 +232,40 @@ public class ProductResource {
 
 	}
 
-	public ResponseEntity<CommonApiResponse> deleteProduct(int productId, int sellerId) {
+	public ResponseEntity<CommonApiResponse> deleteProduct(int productId, String authorization) {
 
 		LOG.info("request received for deleting the product");
-
 		CommonApiResponse response = new CommonApiResponse();
-
-		if (productId == 0 || sellerId == 0) {
+		if (productId == 0) {
 			response.setResponseMessage("missing input");
 			response.setSuccess(false);
-
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
-		Product product = this.productService.getProductById(productId);
+		String username = jwtUtils.extractUsernameFromHeaders(authorization);
+		if (username == null) {
+			response.setResponseMessage("Seller not found, Unauthorized User to delete the Product");
+			response.setSuccess(false);
+			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.UNAUTHORIZED);
+		}
 
+		User user = this.userService.getUserByEmailId(username);
+		if (user.getRole().equals(UserRole.ROLE_DELIVERY.value())) {
+			response.setResponseMessage("User is not seller, Unauthorized User to delete the Product");
+			response.setSuccess(false);
+			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.UNAUTHORIZED);
+		}
+
+		Product product = this.productService.getProductById(productId);
 		if (product == null) {
 			response.setResponseMessage("product not found, failed to delete the product");
 			response.setSuccess(false);
-
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		if (product.getSeller().getId() != sellerId) {
+		if (product.getSeller().getId() != user.getId()) {
 			response.setResponseMessage("Product not owned by Seller, Can't Delete");
 			response.setSuccess(false);
-
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -266,9 +279,7 @@ public class ProductResource {
 
 		response.setResponseMessage("Product Deleted Successful");
 		response.setSuccess(true);
-
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
-
 	}
 
 	public ResponseEntity<ProductResponseDto> fetchAllProducts() {

@@ -211,7 +211,7 @@ public class CartResource {
 		return new ResponseEntity<CartResponseDto>(response, HttpStatus.OK);
 	}
 
-	public ResponseEntity<CartResponseDto> fetchUserCartDetails(int userId) {
+	public ResponseEntity<CartResponseDto> getCartItemsByUserIdDetails(int userId) {
 
 		LOG.info("Request received for fetching the user cart");
 

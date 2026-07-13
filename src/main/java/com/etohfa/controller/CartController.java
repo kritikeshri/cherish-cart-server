@@ -46,10 +46,10 @@ public class CartController {
 		return cartResource.deleteCart(request);
 	}
 	
-	@GetMapping("/fetch")
-	@Operation(summary = "Api to fetch the user cart")
-	public ResponseEntity<CartResponseDto> fetchUserCart(@RequestParam("userId") int userId) {
-		return cartResource.fetchUserCartDetails(userId);
+	@GetMapping(value = "/items", params = "userId")
+	@Operation(summary = "Api to get the cart items for user")
+	public ResponseEntity<CartResponseDto> getCartItemsByUserId(@RequestParam("userId") int userId) {
+		return cartResource.getCartItemsByUserIdDetails(userId);
 	}
 
 }

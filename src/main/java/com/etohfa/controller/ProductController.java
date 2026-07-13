@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.etohfa.dto.CommonApiResponse;
@@ -49,11 +49,11 @@ public class ProductController {
 		return this.productResource.updateProductImage(request);
 	}
 
-	@DeleteMapping("/delete")
+	@DeleteMapping("/{productId}")
 	@Operation(summary = "Api to delete product")
-	public ResponseEntity<CommonApiResponse> deleteProduct(@RequestParam("productId") int productId,
-			@RequestParam("sellerId") int sellerId) {
-		return this.productResource.deleteProduct(productId, sellerId);
+	public ResponseEntity<CommonApiResponse> deleteProduct(@PathVariable("productId") int productId,
+			@RequestHeader("Authorization") String authorization) {
+		return this.productResource.deleteProduct(productId, authorization);
 	}
 
 	@GetMapping("/{productId}")

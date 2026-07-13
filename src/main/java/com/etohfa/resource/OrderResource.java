@@ -190,30 +190,24 @@ public class OrderResource {
 		return new ResponseEntity<OrderResponseDto>(response, HttpStatus.OK);
 	}
 
-	public ResponseEntity<OrderResponseDto> fetchUserOrders(int userId) {
-
+	public ResponseEntity<OrderResponseDto> getOrdersByUserId(int userId) {
 		LOG.info("Request received for fetching all orders");
-
+		
 		OrderResponseDto response = new OrderResponseDto();
-
 		if (userId == 0) {
 			response.setResponseMessage("User Id missing");
 			response.setSuccess(false);
-
 			return new ResponseEntity<OrderResponseDto>(response, HttpStatus.BAD_REQUEST);
 		}
 
 		User user = this.userService.getUserById(userId);
-
 		if (user == null) {
 			response.setResponseMessage("User not found, failed to fetch user orders");
 			response.setSuccess(false);
-
 			return new ResponseEntity<OrderResponseDto>(response, HttpStatus.BAD_REQUEST);
 		}
 
 		List<Orders> orders = new ArrayList<>();
-
 		orders = this.orderService.getOrdersByUserAndStatusIn(user,
 				Arrays.asList(DeliveryStatus.PENDING.value(), DeliveryStatus.DELIVERED.value(),
 						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
@@ -221,14 +215,12 @@ public class OrderResource {
 		if (CollectionUtils.isEmpty(orders)) {
 			response.setResponseMessage("No orders found");
 			response.setSuccess(false);
-
 			return new ResponseEntity<OrderResponseDto>(response, HttpStatus.OK);
 		}
 
 		response.setOrders(orders);
 		response.setResponseMessage("Orders fetched successful");
 		response.setSuccess(true);
-
 		return new ResponseEntity<OrderResponseDto>(response, HttpStatus.OK);
 	}
 
