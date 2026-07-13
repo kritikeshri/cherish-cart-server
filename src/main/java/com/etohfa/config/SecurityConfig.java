@@ -68,10 +68,10 @@ public class SecurityConfig {
 						
 						// this APIs are only accessible by Customer
 						.requestMatchers( "/api/order/fetch/user-wise", "/api/cart/update",
-								"/api/cart/add", "/api/cart/fetch", "/api/cart/delete", "/api/product/review/add")
+								"/api/cart/add", "/api/cart/fetch", "/api/cart/delete")
 						.hasAuthority(UserRole.ROLE_CUSTOMER.value())
 
-						.requestMatchers(HttpMethod.POST, "/api/order")
+						.requestMatchers(HttpMethod.POST, "/api/order", "/api/products/review")
 						.hasAuthority(UserRole.ROLE_CUSTOMER.value())
 
 						// this APIs are only accessible by ADMIN & SELLER

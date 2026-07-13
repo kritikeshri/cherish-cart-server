@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,23 +19,23 @@ import com.etohfa.resource.ReviewResource;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping("api/products/review")
+@RequestMapping("api/products")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ReviewController {
 	
 	@Autowired
 	private ReviewResource reviewResource;
 	
-	@PostMapping("add")
+	@PostMapping("/review")
 	@Operation(summary = "Api to add product review")
 	public ResponseEntity<CommonApiResponse> addProductReview(@RequestBody AddReviewRequest review) {
 		return this.reviewResource.addReview(review);
 	}
 	
-	@GetMapping("fetch")
+	@GetMapping("/{productId}/reviews")
 	@Operation(summary = "Api to fetch product reviews")
-	public ResponseEntity<ProductReviewResponseDto> fetchProductReview(@RequestParam("productId") int productReview) {
-		return this.reviewResource.fetchProductReviews(productReview);
+	public ResponseEntity<ProductReviewResponseDto> fetchProductReview(@PathVariable("productId") int productId) {
+		return this.reviewResource.fetchProductReviews(productId);
 	}
 	
 	@GetMapping("seller")
