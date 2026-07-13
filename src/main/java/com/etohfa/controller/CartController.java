@@ -21,26 +21,26 @@ import com.etohfa.resource.CartResource;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping("api/cart")
+@RequestMapping("api/carts")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CartController {
 
 	@Autowired
 	private CartResource cartResource;
 
-	@PostMapping("/add")
+	@PostMapping("/items")
 	@Operation(summary = "Api to add cart")
 	public ResponseEntity<CommonApiResponse> addCategory(@RequestBody CartRequestDto request, @RequestHeader("Authorization") String authorization) {
 		return cartResource.addToCart(request, authorization);
 	}
 	
-	@PutMapping("/update")
+	@PutMapping("/items")
 	@Operation(summary = "Api to update cart")
 	public ResponseEntity<CartResponseDto> updateCart(@RequestBody CartRequestDto request) {
 		return cartResource.updateCart(request);
 	}
 	
-	@DeleteMapping("/delete")
+	@DeleteMapping("/items")
 	@Operation(summary = "Api to delete cart")
 	public ResponseEntity<CartResponseDto> deleteCart(@RequestBody CartRequestDto request) {
 		return cartResource.deleteCart(request);
