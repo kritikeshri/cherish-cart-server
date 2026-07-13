@@ -36,8 +36,8 @@ public class Constants {
 	}
 
 	public enum DeliveryStatus {
-		CANCELLED("Cancelled"), DELIVERED("Delivered"), ON_THE_WAY("On the Way"), PENDING("Pending"),
-		PROCESSING("Processing");
+		CANCELLED("Cancelled"), DELIVERED("Delivered"), ON_THE_WAY("On the Way"), 
+		PLACED("Placed"), PROCESSING("Processing");
 
 		private String status;
 

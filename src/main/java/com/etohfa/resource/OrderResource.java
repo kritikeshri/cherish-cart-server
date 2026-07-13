@@ -128,7 +128,7 @@ public class OrderResource {
 		        order.setOrderTime(orderTime);
 		        order.setQuantity(cart.getQuantity());
 		        order.setProduct(cart.getProduct());
-		        order.setStatus(DeliveryStatus.PENDING.value());
+		        order.setStatus(DeliveryStatus.PLACED.value());
 
 		        orders.add(order);
 		        
@@ -208,7 +208,7 @@ public class OrderResource {
 
 		List<Orders> orders = new ArrayList<>();
 		orders = this.orderService.getOrdersByUserAndStatusIn(user,
-				Arrays.asList(DeliveryStatus.PENDING.value(), DeliveryStatus.DELIVERED.value(),
+				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
 						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
@@ -248,7 +248,7 @@ public class OrderResource {
 		List<Orders> orders = new ArrayList<>();
 
 		orders = this.orderService.getOrdersBySellerAndStatusIn(seller,
-				Arrays.asList(DeliveryStatus.PENDING.value(), DeliveryStatus.DELIVERED.value(),
+				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
 						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
@@ -310,7 +310,7 @@ public class OrderResource {
 		}
 
 		List<Orders> orders = this.orderService.getOrdersByOrderIdAndStatusIn(request.getOrderId(),
-				Arrays.asList(DeliveryStatus.PENDING.value(), DeliveryStatus.DELIVERED.value(),
+				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
 						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
@@ -364,7 +364,7 @@ public class OrderResource {
 		User deliveryPerson = this.userService.getUserById(request.getDeliveryId());
 
 		List<Orders> orders = this.orderService.getOrdersByOrderIdAndStatusIn(request.getOrderId(),
-				Arrays.asList(DeliveryStatus.PENDING.value(), DeliveryStatus.DELIVERED.value(),
+				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
 						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
@@ -430,7 +430,7 @@ public class OrderResource {
 		List<Orders> orders = new ArrayList<>();
 
 		orders = this.orderService.getOrdersByDeliveryPersonAndStatusIn(delivery,
-				Arrays.asList(DeliveryStatus.PENDING.value(), DeliveryStatus.DELIVERED.value(),
+				Arrays.asList(DeliveryStatus.PLACED.value(), DeliveryStatus.DELIVERED.value(),
 						DeliveryStatus.ON_THE_WAY.value(), DeliveryStatus.PROCESSING.value()));
 
 		if (CollectionUtils.isEmpty(orders)) {
