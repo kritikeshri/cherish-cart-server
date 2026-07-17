@@ -126,7 +126,7 @@ public class ProductResource {
 
 		CommonApiResponse response = new CommonApiResponse();
 
-		if (request == null || productId == 0) {
+		if (request == null || productId == 0 || request.getCategoryId() == 0) {
 			response.setResponseMessage("missing input");
 			response.setSuccess(false);
 
@@ -134,7 +134,6 @@ public class ProductResource {
 		}
 
 		Product product = this.productService.getProductById(productId);
-
 		if (product == null) {
 			response.setResponseMessage("product not found");
 			response.setSuccess(false);
@@ -143,7 +142,7 @@ public class ProductResource {
 		}
 
 		// it will update the category if changed
-		if (product.getCategory().getId() != request.getCategoryId()) {
+ 		if (product.getCategory().getId() != request.getCategoryId()) {
 			Category category = this.categoryService.getCategoryById(request.getCategoryId());
 			product.setCategory(category);
 		}
@@ -178,7 +177,7 @@ public class ProductResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
-		if (request.getImage1() == null || request.getImage2() == null || request.getImage3() == null) {
+		if (request.getImage1() == null && request.getImage2() == null && request.getImage3() == null) {
 			response.setResponseMessage("Image not selected");
 			response.setSuccess(false);
 
@@ -193,13 +192,19 @@ public class ProductResource {
 
 		// store updated product image in Image Folder and give name to store in
 		// database
-		String productImageName1 = storageService.store(request.getImage1());
-		String productImageName2 = storageService.store(request.getImage2());
-		String productImageName3 = storageService.store(request.getImage3());
-
-		product.setImage1(productImageName1);
-		product.setImage2(productImageName2);
-		product.setImage3(productImageName3);
+		if (request.getImage1() !=null) {
+			String productImageName1 = storageService.store(request.getImage1());
+			product.setImage1(productImageName1);
+		}
+		
+		if (request.getImage2()!=null) {
+			String productImageName2 = storageService.store(request.getImage2());
+			product.setImage2(productImageName2);
+		}
+		if (request.getImage2()!=null) {
+			String productImageName3 = storageService.store(request.getImage3());
+			product.setImage3(productImageName3);
+		}
 
 		Product updatedProduct = this.productService.addProduct(product);
 

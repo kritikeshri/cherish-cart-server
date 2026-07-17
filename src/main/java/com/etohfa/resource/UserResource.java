@@ -121,7 +121,9 @@ public class UserResource {
 
 		CommonApiResponse response = new CommonApiResponse();
 
-		if (request == null || request.getEmailId() == null || request.getPassword() == null || request.getRole() == null) {
+		if (request == null || request.getEmailId() == null || request.getPassword() == null || 
+			request.getRole() == null || request.getFirstName() == null|| request.getLastName()== null 
+			|| request.getPhoneNo() == null) {
 			response.setResponseMessage("missing input fields, email, password and role are mandatory");
 			response.setSuccess(false);
 

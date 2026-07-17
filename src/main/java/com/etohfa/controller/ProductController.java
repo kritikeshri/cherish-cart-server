@@ -46,7 +46,7 @@ public class ProductController {
 		return this.productResource.updateProductDetail(request, productId);
 	}
 
-	@PutMapping("/image")
+	@PutMapping("/images")
 	@Operation(summary = "Api to update product images")
 	public ResponseEntity<CommonApiResponse> updateProductImage(ProductAddRequest request) {
 		return this.productResource.updateProductImage(request);
