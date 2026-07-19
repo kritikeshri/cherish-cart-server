@@ -1,59 +1,75 @@
 package com.etohfa.service;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 @Component
 public class StorageServiceImpl implements StorageService {
 
-	@Value("${com.etohfa.image.folder.path}")
-	private String BASEPATH;
+	@Autowired
+	private final Cloudinary cloudinary;
+
+	public StorageServiceImpl(Cloudinary cloudinary) {
+    this.cloudinary = cloudinary;
+}
 
 	@Override
 	public List<String> loadAll() {
-		File dirPath = new File(BASEPATH);
-		return Arrays.asList(dirPath.list());
-	}
+        return Collections.emptyList();
+    }
 
 	@Override
 	public String store(MultipartFile file) {
-
-		String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-
-		String fileName = UUID.randomUUID().toString().replaceAll("-", "") + ext;
-		File filePath = new File(BASEPATH, fileName);
-		try (FileOutputStream out = new FileOutputStream(filePath)) {
-			FileCopyUtils.copy(file.getInputStream(), out);
-			return fileName;
-		} catch (Exception e) {
-			e.printStackTrace();
+		try {
+			Map<?, ?> uploadResult = cloudinary.uploader().upload(
+					file.getBytes(),
+					ObjectUtils.emptyMap()
+			);
+			return uploadResult.get("secure_url").toString();
+		} catch (IOException e) {
+			throw new RuntimeException("Image upload failed", e);
 		}
-		return null;
 	}
 
 	@Override
-	public Resource load(String fileName) {
-		File filePath = new File(BASEPATH, fileName);
-		if (filePath.exists())
-			return new FileSystemResource(filePath);
-		return null;
-	}
+    public Resource load(String fileName) {
+        return null;
+    }
 
-	@Override
-	public void delete(String fileName) {
-		File filePath = new File(BASEPATH, fileName);
-		if (filePath.exists())
-			filePath.delete();
-	}
+    @Override
+public void delete(String imageUrl) {
+
+    if (imageUrl == null || imageUrl.isBlank()) {
+        return;
+    }
+    try {
+
+        String publicId = imageUrl.substring(
+                imageUrl.indexOf("/upload/") + 8
+        );
+
+        publicId = publicId.replaceFirst("^v\\d+/", "");
+        publicId = publicId.substring(0, publicId.lastIndexOf('.'));
+
+        Map<?, ?> resource = cloudinary.api().resource(publicId, ObjectUtils.emptyMap());
+
+        if (resource != null) {
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        }
+
+    } catch (com.cloudinary.api.exceptions.NotFound notFound) {
+        // Image doesn't exist anymore. Ignore.
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to delete image from Cloudinary", e);
+    }
+}
 
 }

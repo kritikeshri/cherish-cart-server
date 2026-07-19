@@ -201,7 +201,7 @@ public class ProductResource {
 			String productImageName2 = storageService.store(request.getImage2());
 			product.setImage2(productImageName2);
 		}
-		if (request.getImage2()!=null) {
+		if (request.getImage3()!=null) {
 			String productImageName3 = storageService.store(request.getImage3());
 			product.setImage3(productImageName3);
 		}
