@@ -186,6 +186,13 @@ public class ProductResource {
 
 		Product product = this.productService.getProductById(request.getId());
 
+		if (product == null) {
+			response.setResponseMessage("Failed to update image, Product not found");
+			response.setSuccess(false);
+
+			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
+		}
+
 		String existingImage1 = product.getImage1();
 		String existingImage2 = product.getImage2();
 		String existingImage3 = product.getImage3();
